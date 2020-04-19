@@ -2,11 +2,13 @@ package com.evizcloud.soccerapp.persistence.repository.impl;
 
 import com.evizcloud.soccerapp.persistence.model.League;
 import com.evizcloud.soccerapp.persistence.repository.ILeagueRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class LeagueRepositoryImpl implements ILeagueRepository {
 
     List<League> leagues = new ArrayList<>();
