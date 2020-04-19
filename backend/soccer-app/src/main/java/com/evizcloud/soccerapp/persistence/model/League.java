@@ -15,6 +15,10 @@ public class League {
         this.dateCreated = dateCreated;
     }
 
+    public League(League league) {
+        this(league.getId(), league.getName(), league.getDateCreated());
+    }
+
     public Long getId() {
         return id;
     }
