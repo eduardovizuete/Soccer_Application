@@ -2,6 +2,7 @@ package com.evizcloud.soccerapp.persistence.model;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Random;
 
 public class League {
 
@@ -11,6 +12,12 @@ public class League {
 
     public League(Long id, String name, LocalDate dateCreated) {
         this.id = id;
+        this.name = name;
+        this.dateCreated = dateCreated;
+    }
+
+    public League(String name, LocalDate dateCreated) {
+        this.id = new Random().nextLong();
         this.name = name;
         this.dateCreated = dateCreated;
     }
