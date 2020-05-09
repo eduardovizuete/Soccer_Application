@@ -1,29 +1,31 @@
 package com.evizcloud.soccerapp.persistence.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.Random;
 
+@Entity
 public class League {
 
+    @Id
+    @GeneratedValue
     private Long id;
+
     private String name;
+
     private LocalDate dateCreated;
 
-    public League(Long id, String name, LocalDate dateCreated) {
-        this.id = id;
-        this.name = name;
-        this.dateCreated = dateCreated;
-    }
+    public League() { }
 
     public League(String name, LocalDate dateCreated) {
-        this.id = new Random().nextLong();
         this.name = name;
         this.dateCreated = dateCreated;
     }
 
     public League(League league) {
-        this(league.getId(), league.getName(), league.getDateCreated());
+        this(league.getName(), league.getDateCreated());
     }
 
     public Long getId() {
