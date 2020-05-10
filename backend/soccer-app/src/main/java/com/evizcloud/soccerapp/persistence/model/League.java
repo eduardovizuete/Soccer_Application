@@ -1,10 +1,11 @@
 package com.evizcloud.soccerapp.persistence.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 public class League {
@@ -17,15 +18,23 @@ public class League {
 
     private LocalDate dateCreated;
 
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "league_id")
+    private Set<Team> teams;
+
     public League() { }
 
     public League(String name, LocalDate dateCreated) {
         this.name = name;
         this.dateCreated = dateCreated;
+        this.teams = new HashSet<>();
     }
 
     public League(League league) {
         this(league.getName(), league.getDateCreated());
+        this.teams = league.getTeams()
+                .stream()
+                .collect(Collectors.toSet());
     }
 
     public Long getId() {
@@ -52,19 +61,28 @@ public class League {
         this.dateCreated = dateCreated;
     }
 
+    public Set<Team> getTeams() {
+        return teams;
+    }
+
+    public void setTeams(Set<Team> teams) {
+        this.teams = teams;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         League league = (League) o;
-        return id.equals(league.id) &&
-                name.equals(league.name) &&
-                dateCreated.equals(league.dateCreated);
+        return Objects.equals(id, league.id) &&
+                Objects.equals(name, league.name) &&
+                Objects.equals(dateCreated, league.dateCreated) &&
+                Objects.equals(teams, league.teams);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, dateCreated);
+        return Objects.hash(id, name, dateCreated, teams);
     }
 
     @Override
@@ -73,6 +91,7 @@ public class League {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", dateCreated=" + dateCreated +
+                ", teams=" + teams +
                 '}';
     }
 
