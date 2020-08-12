@@ -2,6 +2,7 @@ package com.evizcloud.soccerapp.persistence.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -10,7 +11,7 @@ import java.util.Objects;
 public class Team {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -33,6 +34,14 @@ public class Team {
         this.dateCreated = dateCreated;
         this.dateFinished = dateFinished;
         this.status = TeamStatus.ACTIVE;
+    }
+
+    public Team(String name, String description, LocalDate dateCreated, LocalDate dateFinished, TeamStatus status) {
+        this.name = name;
+        this.description = description;
+        this.dateCreated = dateCreated;
+        this.dateFinished = dateFinished;
+        this.status = status;
     }
 
     public Team(Team task) {

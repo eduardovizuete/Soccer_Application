@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class League {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;

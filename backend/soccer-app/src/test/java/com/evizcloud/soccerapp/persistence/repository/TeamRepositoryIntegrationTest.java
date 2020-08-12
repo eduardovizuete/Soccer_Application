@@ -7,15 +7,33 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 public class TeamRepositoryIntegrationTest {
 
     @Autowired
     ITeamRepository teamRepository;
+
+    @Test
+    public void whenSavingNewTask_thenSuccess() {
+        Team newTeam = new Team("First Task", "First Task", LocalDate.now(), LocalDate.now());
+        assertNotNull(teamRepository.save(newTeam));
+    }
+
+    @Test
+    public void givenTask_whenFindById_thenSuccess() {
+        Team newTeam = new Team("First Task", "First Task", LocalDate.now(), LocalDate.now());
+        teamRepository.save(newTeam);
+
+        Optional<Team> retreivedTeam = teamRepository.findById(newTeam.getId());
+        assertEquals(retreivedTeam.get(), newTeam);
+    }
 
     @Test
     public void givenTeamCreated_thenFindByTeamNameMatchesSuccess() {
