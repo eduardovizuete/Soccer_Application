@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TeamServiceImpl implements ITeamService {
 
-    private ITeamRepository teamRepository;
+    private final ITeamRepository teamRepository;
 
     public TeamServiceImpl(ITeamRepository teamRepository) {
         this.teamRepository = teamRepository;

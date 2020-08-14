@@ -9,12 +9,15 @@ import com.evizcloud.soccerapp.service.ITeamService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class LeagueServiceImpl implements ILeagueService {
@@ -23,7 +26,7 @@ public class LeagueServiceImpl implements ILeagueService {
 
     private final ILeagueRepository leagueRepository;
 
-    private ITeamService teamService;
+    private final ITeamService teamService;
 
     public LeagueServiceImpl(ILeagueRepository leagueRepository, ITeamService teamService) {
         this.leagueRepository = leagueRepository;
@@ -67,6 +70,17 @@ public class LeagueServiceImpl implements ILeagueService {
         newLeague.setTeams(teams);
 
         save(newLeague);
+    }
+
+    @Override
+    public League addTeams(League league, List<Team> teams) {
+        league.getTeams()
+                .addAll(teams.stream()
+                        .filter(t -> !StringUtils.isEmpty(t.getName()))
+                        .collect(Collectors.toList()));
+        leagueRepository.save(league);
+
+        return league;
     }
 
 }

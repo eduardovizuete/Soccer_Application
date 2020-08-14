@@ -9,7 +9,7 @@ public enum TeamStatus {
 
     private final String label;
 
-    private TeamStatus(String label) {
+    TeamStatus(String label) {
         this.label = label;
     }
 

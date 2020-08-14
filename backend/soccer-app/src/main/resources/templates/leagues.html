@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Leagues</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+
+<body>
+    <table class="table col-md-6 ml-3">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Date Created</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="league : ${leagues}">
+                <td th:text="${league.id}"></td>
+                <td><a th:href="@{/leagues/{id}(id=${league.id})}"
+                       th:text="${league.name}"></a></td>
+                <td th:text="${league.dateCreated}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <p>
+        <a th:href="@{/leagues/new}" class="btn btn-link">New League</a>
+    </p>
+</body>
