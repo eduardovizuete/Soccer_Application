@@ -47,6 +47,11 @@ public class LeagueServiceImpl implements ILeagueService {
     }
 
     @Override
+    public Iterable<League> findByName(String name) {
+        return leagueRepository.findByNameContaining(name);
+    }
+
+    @Override
     public League save(League league) {
         LOG.info("League Service >> Saving League {}", league);
         return leagueRepository.save(league);
@@ -81,6 +86,11 @@ public class LeagueServiceImpl implements ILeagueService {
         leagueRepository.save(league);
 
         return league;
+    }
+
+    @Override
+    public void delete(Long id) {
+        leagueRepository.deleteById(id);
     }
 
 }

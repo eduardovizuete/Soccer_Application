@@ -16,10 +16,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Controller
+@RestController
 @RequestMapping(value = "/leagues")
 public class LeagueController {
 
@@ -29,64 +30,48 @@ public class LeagueController {
         this.leagueService = leagueService;
     }
 
-    @GetMapping
-    public String getLeagues(Model model) {
-        Iterable<League> leagues = leagueService.findAll();
-        List<LeagueDto> leagueDtos = new ArrayList<>();
-        leagues.forEach(p -> leagueDtos.add(convertToDto(p)));
-        model.addAttribute("leagues", leagueDtos);
-        return "leagues";
-    }
-
-    @GetMapping("/new")
-    public String newLeague(Model model) {
-        model.addAttribute("league", new LeagueDto());
-        return "new-league";
-    }
-
     @GetMapping(value = "/{id}")
-    public String getProject(@PathVariable Long id, Model model) {
-        League league = leagueService.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        model.addAttribute("league", convertToDto(league));
+    public LeagueDto findOne(@PathVariable Long id) {
+        League entity = leagueService.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "League not found"));
+        return convertToDto(entity);
+    }
 
-        return "league";
+    // PathVariable with Regular Expressions
+    // request example http://localhost:8080/leagues/teamA-12/1
+    @GetMapping(value = "/{team}-{subcategoryId:\\d\\d}/{id}")
+    public LeagueDto findOneRegExp(@PathVariable Long id, @PathVariable String team, @PathVariable Integer subcategoryId) {
+        League entity = leagueService.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "League not found"));
+        return convertToDto(entity);
     }
 
     @PostMapping
-    public String addLeague(@Valid @ModelAttribute("league") LeagueDto newLeague, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "new-league";
-        }
-
-        leagueService.save(convertToEntity(newLeague));
-        return "redirect:/leagues";
+    @ResponseStatus(HttpStatus.CREATED)
+    public LeagueDto create(@RequestBody LeagueDto newLeague) {
+        League entity = convertToEntity(newLeague);
+        return this.convertToDto(this.leagueService.save(entity));
     }
 
-    @GetMapping("/{id}/add-teams")
-    public String getProjectEditPage(@PathVariable Long id, Model model) {
-        League league = leagueService.findById(id)
-                .orElse(new League());
-        model.addAttribute("league", league);
-        TeamListDto teamsForm = new TeamListDto();
-        for (int i = 1; i <= 3; i++) {
-            teamsForm.addTeam(new TeamDto());
-        }
-        model.addAttribute("teamsForm", teamsForm);
-        return "add-teams";
+    // request example http://http://localhost:8080/leagues?name=1
+    @GetMapping
+    public Collection<LeagueDto> findLeagues(@RequestParam(name = "name", defaultValue = "") String name) {
+        Iterable<League> allLeagues = this.leagueService.findByName(name);
+        List<LeagueDto> projectDtos = new ArrayList<>();
+        allLeagues.forEach(p -> projectDtos.add(convertToDto(p)));
+        return projectDtos;
     }
 
-    @PostMapping("{id}/save-teams")
-    public String saveTeams(@ModelAttribute TeamListDto teamsForm, @PathVariable Long id, Model model) {
-        League league = leagueService.findById(id)
-                .orElse(new League());
-        leagueService.addTeams(league, teamsForm.getTeams()
-                .stream()
-                .map(this::convertTeamToEntity)
-                .collect(Collectors.toList()));
-        model.addAttribute("league", league);
+    @PutMapping("/{id}")
+    public LeagueDto updateLeague(@PathVariable("id") Long id, @RequestBody LeagueDto updatedLeague) {
+        League projectEntity = convertToEntity(updatedLeague);
+        return this.convertToDto(this.leagueService.save(projectEntity));
+    }
 
-        return "redirect:/leagues/" + league.getId();
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteLeague(@PathVariable("id") Long id) {
+        leagueService.delete(id);
     }
 
     protected LeagueDto convertToDto(League entity) {

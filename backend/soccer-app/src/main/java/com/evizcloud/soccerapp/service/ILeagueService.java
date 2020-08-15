@@ -13,10 +13,14 @@ public interface ILeagueService {
 
     Optional<League> findById(Long id);
 
+    Iterable<League> findByName(String name);
+
     League save(League league);
 
     void createProjectWithTasks() throws TeamNotSavedException;
 
     League addTeams(League league, List<Team> teams);
+
+    void delete(Long id);
 
 }

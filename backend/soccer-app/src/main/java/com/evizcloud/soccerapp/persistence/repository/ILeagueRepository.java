@@ -13,4 +13,6 @@ public interface ILeagueRepository extends PagingAndSortingRepository<League, Lo
 
     List<League> findByDateCreatedBetween(LocalDate start, LocalDate end);
 
+    Iterable<League> findByNameContaining(String name);
+
 }

@@ -11,8 +11,7 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 public class TeamRepositoryIntegrationTest {
@@ -21,18 +20,18 @@ public class TeamRepositoryIntegrationTest {
     ITeamRepository teamRepository;
 
     @Test
-    public void whenSavingNewTask_thenSuccess() {
-        Team newTeam = new Team("First Task", "First Task", LocalDate.now(), LocalDate.now());
-        assertNotNull(teamRepository.save(newTeam));
+    public void givenNewTeam_whenSaved_thenSuccess() {
+        Team newTeam = new Team("First Team", "First Team", LocalDate.now(), LocalDate.now());
+        assertThat(teamRepository.save(newTeam)).isNotNull();
     }
 
     @Test
-    public void givenTask_whenFindById_thenSuccess() {
-        Team newTeam = new Team("First Task", "First Task", LocalDate.now(), LocalDate.now());
+    public void givenTeamCreated_whenFindById_thenSuccess() {
+        Team newTeam = new Team("First Team", "First Team", LocalDate.now(), LocalDate.now());
         teamRepository.save(newTeam);
 
         Optional<Team> retreivedTeam = teamRepository.findById(newTeam.getId());
-        assertEquals(retreivedTeam.get(), newTeam);
+        assertThat(retreivedTeam.get()).isEqualTo(newTeam);
     }
 
     @Test

@@ -8,7 +8,6 @@ public class LeagueDto {
 
     private Long id;
 
-    @NotBlank
     private String name;
 
     private LocalDate dateCreated;

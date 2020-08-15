@@ -29,14 +29,13 @@ public class LeagueRepositoryIntegrationTest {
     private ILeagueRepository leagueRepository;
 
     @Test
-    public void whenSavingNewLeague_thenSuccess() {
+    public void givenNewLeague_whenSaved_thenSuccess() {
         League league = new League(randomAlphabetic(6), LocalDate.now());
-
         assertNotNull(leagueRepository.save(league));
     }
 
     @Test
-    public void givenLeague_whenFindById_thenSuccess() {
+    public void givenLeagueCreated_whenFindById_thenSuccess() {
         League newLeague = new League(randomAlphabetic(6), LocalDate.now());
         leagueRepository.save(newLeague);
 
